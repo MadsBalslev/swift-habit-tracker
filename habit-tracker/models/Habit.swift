@@ -14,7 +14,7 @@ final class Habit {
     var details: String
     @Relationship(deleteRule: .cascade) var completions = [HabitCompletion]()
     
-    init(title: String = "", description: String = "") {
+    init(title: String, description: String) {
         self.title = title
         self.details = description
     }

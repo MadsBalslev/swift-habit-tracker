@@ -1,29 +1,28 @@
 //
-//  EditHabitView.swift
+//  NewHabitView.swift
 //  habit-tracker
 //
-//  Created by Mads Balslev on 31/07/2024.
+//  Created by Mads Balslev on 02/08/2024.
 //
 
 import SwiftData
 import SwiftUI
 
-struct EditHabitView: View {
-    @Bindable var habit: Habit
-    @State var saved: Bool?
+struct NewHabitView: View {
+    @Environment(\.presentationMode) private var presentationMode
     
-    var onSave: ((Habit) -> Bool)?
+    @State private var viewModel: ViewModel
     
     var body: some View {
         VStack(alignment: .center) {
-            TextField("What's your new habit?", text: $habit.title)
+            TextField("What's your new habit?", text: $viewModel.habitTitle)
                 .font(.title)
                 .padding()
-            TextField("Description", text: $habit.details)
+            TextField("Description", text: $viewModel.habitDescription)
                 .font(.title2)
                 .padding()
             Spacer()
-            if saved != nil && !saved! {
+            if !viewModel.errMsg.isEmpty {
                 HStack {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .resizable()
@@ -32,7 +31,7 @@ struct EditHabitView: View {
                     VStack(alignment: .leading) {
                         Text("Something went wrong.")
                             .fontWeight(.bold)
-                        Text("Make Sure the tile is filled out")
+                        Text(viewModel.errMsg)
                     }
                     Spacer()
                 }
@@ -42,33 +41,29 @@ struct EditHabitView: View {
                 .clipShape(.buttonBorder)
             }
             
-            Button(action: save) {
+            Button{
+                if (viewModel.createNewHabit()) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            } label: {
                 Text("Save")
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(viewModel.valid ? .cyan : .cyan.opacity(0.7))
+                    .clipShape(.buttonBorder)
             }
-            .padding()
-            .background(.cyan)
-            .clipShape(.buttonBorder)
+            .disabled(!viewModel.valid)
             
         }
         .padding()
     }
     
-    init(habit: Habit) {
-        self.habit = habit
-    }
-    
-    init(habit: Habit, onSave: @escaping (Habit) -> Bool) {
-        self.habit = habit
-        self.onSave = onSave
-    }
-    
-    private func save() {
-        guard onSave != nil else { return }
-        saved = onSave?(habit) ?? false
+    init(modelContext: ModelContext) {
+        let viewModel = ViewModel(modelContext: modelContext)
+        _viewModel = State(initialValue: viewModel)
     }
 }
 
@@ -76,11 +71,9 @@ struct EditHabitView: View {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: Habit.self, configurations: config)
-        let example = Habit(title: "Read for 1 hour")
-        return EditHabitView(habit: example)
-            .modelContainer(container)
+        let modelContext = ModelContext(container)
+        return NewHabitView(modelContext: modelContext)
     } catch {
-        fatalError("Some")
+        fatalError("Something went wrong")
     }
-    
 }
