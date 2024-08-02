@@ -12,23 +12,20 @@ extension NewHabitView {
     @Observable
     class ViewModel {
         var modelContext: ModelContext
-        var habitTitle: String = ""
-        var habitDescription: String = ""
+        var habit: Habit
         var errMsg: String = ""
         var valid: Bool {
-            return !habitTitle.isEmpty && !habitDescription.isEmpty
+            return !habit.title.isEmpty
         }
         
         init(modelContext: ModelContext) {
             self.modelContext = modelContext
+            self.habit = Habit(title: "", description: "")
         }
         
         func createNewHabit() -> Bool {
-            let habit = Habit(title: habitTitle, description: habitDescription)
-            if (!habit.title.isEmpty && !habit.details.isEmpty) {
+            if (!habit.title.isEmpty) {
                 modelContext.insert(habit)
-                habitTitle = ""
-                habitDescription = ""
                 
                 return true
             } else {

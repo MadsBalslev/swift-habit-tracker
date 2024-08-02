@@ -14,51 +14,34 @@ struct NewHabitView: View {
     @State private var viewModel: ViewModel
     
     var body: some View {
-        VStack(alignment: .center) {
-            TextField("What's your new habit?", text: $viewModel.habitTitle)
-                .font(.title)
-                .padding()
-            TextField("Description", text: $viewModel.habitDescription)
-                .font(.title2)
-                .padding()
-            Spacer()
-            if !viewModel.errMsg.isEmpty {
-                HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .resizable()
-                        .frame(width: 25, height: 25)
-                    Spacer()
-                    VStack(alignment: .leading) {
-                        Text("Something went wrong.")
-                            .fontWeight(.bold)
-                        Text(viewModel.errMsg)
+        NavigationStack {
+            HabitFormView(habit: viewModel.habit)
+            .padding()
+            .navigationTitle("New Habit")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button{
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark")
                     }
-                    Spacer()
                 }
-                .foregroundColor(.white)
-                .padding()
-                .background(.red.opacity(0.8))
-                .clipShape(.buttonBorder)
-            }
-            
-            Button{
-                if (viewModel.createNewHabit()) {
-                    presentationMode.wrappedValue.dismiss()
+                ToolbarItem {
+                    Button{
+                        if (viewModel.createNewHabit()) {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    } label: {
+                        Label("Add Habit", systemImage: "checkmark.circle")
+                    }
+                    .disabled(!viewModel.valid)
                 }
-            } label: {
-                Text("Save")
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(viewModel.valid ? .cyan : .cyan.opacity(0.7))
-                    .clipShape(.buttonBorder)
             }
-            .disabled(!viewModel.valid)
-            
+    
+            Spacer()
         }
-        .padding()
+        
     }
     
     init(modelContext: ModelContext) {

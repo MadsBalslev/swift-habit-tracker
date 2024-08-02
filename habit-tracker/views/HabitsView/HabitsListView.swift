@@ -17,6 +17,7 @@ struct HabitsListView: View {
             ForEach(habits) { habit in
                 NavigationLink(value: habit) {
                     Text(habit.title)
+                        .background(Color(habit.color))
                 }
             }
             .onDelete(perform: deleteHabits)
