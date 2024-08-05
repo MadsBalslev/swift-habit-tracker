@@ -25,7 +25,7 @@ struct habit_trackerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HabitsListView(modelContext: sharedModelContainer.mainContext)
         }
         .modelContainer(sharedModelContainer)
     }

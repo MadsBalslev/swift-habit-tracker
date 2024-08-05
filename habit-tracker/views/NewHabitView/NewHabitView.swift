@@ -13,6 +13,8 @@ struct NewHabitView: View {
     
     @State private var viewModel: ViewModel
     
+    var afterSaveCallBack: (() -> Void)?
+    
     var body: some View {
         NavigationStack {
             HabitFormView(habit: viewModel.habit)
@@ -30,6 +32,7 @@ struct NewHabitView: View {
                 ToolbarItem {
                     Button{
                         if (viewModel.createNewHabit()) {
+                            afterSaveCallBack?()
                             presentationMode.wrappedValue.dismiss()
                         }
                     } label: {
@@ -44,19 +47,15 @@ struct NewHabitView: View {
         
     }
     
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContext, afterSaveCallBack: (() -> Void)? = nil) {
+        self.afterSaveCallBack = afterSaveCallBack
         let viewModel = ViewModel(modelContext: modelContext)
         _viewModel = State(initialValue: viewModel)
     }
 }
 
 #Preview {
-    do {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: Habit.self, configurations: config)
-        let modelContext = ModelContext(container)
-        return NewHabitView(modelContext: modelContext)
-    } catch {
-        fatalError("Something went wrong")
-    }
+    let preview = Preview()
+    let modelContext = ModelContext(preview.container)
+    return NewHabitView(modelContext: modelContext)
 }

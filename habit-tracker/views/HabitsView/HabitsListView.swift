@@ -15,9 +15,12 @@ struct HabitsListView: View {
     var body: some View {
         List {
             ForEach(habits) { habit in
-                NavigationLink(value: habit) {
-                    Text(habit.title)
-                        .background(Color(habit.color))
+                NavigationLink{
+                    HabitDetailsView(habit: habit)
+                } label: {
+                    HStack(spacing: 10) {
+                        
+                    }
                 }
             }
             .onDelete(perform: deleteHabits)
@@ -34,5 +37,8 @@ struct HabitsListView: View {
 }
 
 #Preview {
-    HabitsListView()
+    let preview = Preview()
+    preview.addExamples(Habit.sampleHabits)
+    return HabitsListView()
+        .modelContainer(preview.container)
 }

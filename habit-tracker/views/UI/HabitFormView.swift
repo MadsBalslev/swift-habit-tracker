@@ -41,11 +41,6 @@ struct HabitFormView: View {
 }
 
 #Preview {
-    do {
-        let habit = Habit(title: "", description: "")
-        return HabitFormView(habit: habit)
-    } catch {
-        fatalError("Something went wrong")
-    }
-    
+    let habit = Habit(title: "", description: "")
+    return HabitFormView(habit: habit)
 }

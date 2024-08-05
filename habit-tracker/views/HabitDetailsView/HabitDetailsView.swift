@@ -13,13 +13,14 @@ struct HabitDetailsView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Habit Title")
+            Text(viewModel.habit.title)
                 .font(.largeTitle)
                 .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-            Text("This a the habit description, which could potentially be somewhat long, but it shouldn't be too long")
+            Text(viewModel.habit.details)
                 .font(.subheadline)
         }
-        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.red)
     }
     
     init(habit: Habit) {
@@ -29,12 +30,5 @@ struct HabitDetailsView: View {
 }
 
 #Preview {
-    do {
-        let habit = Habit(title: "Test Habit", description: "Test Description")
-        
-        return HabitDetailsView(habit: habit)
-    } catch {
-        fatalError()
-    }
-    
+    HabitDetailsView(habit: Habit.sampleHabits[1])
 }
