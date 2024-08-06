@@ -10,23 +10,10 @@ import SwiftData
 
 @main
 struct habit_trackerApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Habit.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
+    @MainActor
     var body: some Scene {
         WindowGroup {
-            HabitsListView(modelContext: sharedModelContainer.mainContext)
+            HabitsListView(repository: HabitRepository.shared)
         }
-        .modelContainer(sharedModelContainer)
     }
 }

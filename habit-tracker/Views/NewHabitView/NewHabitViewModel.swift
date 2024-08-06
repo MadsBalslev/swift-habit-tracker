@@ -11,21 +11,21 @@ import SwiftData
 extension NewHabitView {
     @Observable
     class ViewModel {
-        var modelContext: ModelContext
+        let dataSource: HabitRepository
         var habit: Habit
         var errMsg: String = ""
         var valid: Bool {
             return !habit.title.isEmpty
         }
         
-        init(modelContext: ModelContext) {
-            self.modelContext = modelContext
+        init(dataSource: HabitRepository) {
+            self.dataSource = dataSource
             self.habit = Habit(title: "", description: "")
         }
         
         func createNewHabit() -> Bool {
             if (!habit.title.isEmpty) {
-                modelContext.insert(habit)
+                dataSource.addHabit(habit)
                 
                 return true
             } else {

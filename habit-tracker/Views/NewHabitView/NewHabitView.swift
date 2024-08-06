@@ -47,15 +47,13 @@ struct NewHabitView: View {
         
     }
     
-    init(modelContext: ModelContext, afterSaveCallBack: (() -> Void)? = nil) {
+    init(dataSource: HabitRepository, afterSaveCallBack: (() -> Void)? = nil) {
         self.afterSaveCallBack = afterSaveCallBack
-        let viewModel = ViewModel(modelContext: modelContext)
+        let viewModel = ViewModel(dataSource: dataSource)
         _viewModel = State(initialValue: viewModel)
     }
 }
 
 #Preview {
-    let preview = Preview()
-    let modelContext = ModelContext(preview.container)
-    return NewHabitView(modelContext: modelContext)
+    NewHabitView(dataSource: HabitRepository())
 }

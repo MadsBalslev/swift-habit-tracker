@@ -29,31 +29,26 @@ struct HabitsListView: View {
             }
             .toolbar {
                 Button {
-//                    showNewHabitSheet = true
-                    viewModel.fetchHabits()
+                    showNewHabitSheet = true
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .imageScale(.large)
                 }
             }
             .sheet(isPresented: $showNewHabitSheet) {
-                NewHabitView(modelContext: modelContext, afterSaveCallBack: viewModel.fetchHabits)
+                NewHabitView(dataSource: viewModel.dataSource, afterSaveCallBack: viewModel.fetchHabits)
                     .presentationDetents([.medium])
             }
             Spacer()
         }
     }
     
-    init(modelContext: ModelContext) {
-        let viewModel = ViewModel(modelContext: modelContext)
+    init(repository: HabitRepository) {
+        let viewModel = ViewModel(dataSource: repository)
         _viewModel = State(initialValue: viewModel)
     }
 }
 
 #Preview {
-    let preview = Preview()
-    let context = preview.container.mainContext
-    preview.addExamples(Habit.sampleHabits)
-    return HabitsListView(modelContext: context)
-        .modelContainer(preview.container)
+    HabitsListView(repository: HabitRepository())
 }

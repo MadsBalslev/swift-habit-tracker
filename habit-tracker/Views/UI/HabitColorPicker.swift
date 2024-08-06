@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct HabitColorPicker: View {
-    private var colors: [Color]  = Habit.colors
+    private var colors: [Color]  = Habit.habitColors()
     
     @State private var selectedColor: Color
     
     var body: some View {
-        LazyHGrid(rows: Array(repeating: GridItem(.fixed(50)), count: 2)) {
+        LazyHGrid(rows: Array(repeating: GridItem(.fixed(50)), count: 1)) {
             ForEach(colors, id: \.self) { color in
                 Button{
                     selectedColor = color

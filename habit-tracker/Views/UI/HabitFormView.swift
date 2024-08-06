@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-enum HabitColor {
-    case red, orange, yellow, blue, green
-}
-
 struct HabitFormView: View {
     @State var habit: Habit
     
